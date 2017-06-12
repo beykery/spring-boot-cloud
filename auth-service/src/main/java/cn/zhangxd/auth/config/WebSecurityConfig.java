@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 /**
  * Created by lihaodi on 2017/5/30.
  */
-
 @Configuration
 @EnableWebSecurity
 @Order(-20)
@@ -39,10 +38,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .permitAll()
                 .and()
-            .requestMatchers()
+                .requestMatchers()
                 .antMatchers("/login", "/oauth/authorize", "/oauth/confirm_access")
                 .and()
-            .authorizeRequests()
+                .authorizeRequests()
                 .anyRequest().authenticated();
     }
 }
