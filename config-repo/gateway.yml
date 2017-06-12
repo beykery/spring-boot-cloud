@@ -25,7 +25,6 @@ zuul:
       serviceId: webapp
     auth-service:
       path: /uaa/**
-      stripPrefix: false
       sensitiveHeaders:
     svca-service:
       path: /svca/**
