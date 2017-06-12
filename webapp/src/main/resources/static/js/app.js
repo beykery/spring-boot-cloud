@@ -53,7 +53,7 @@ angular.module('hello', ['ngRoute']).config(function ($routeProvider, $httpProvi
     })
 
     .controller('protected', function ($scope, $http) {
-        $http.get('/resource/test').success(function (data) {
+        $http.get('/svca').success(function (data) {
             $scope.test = data;
         })
     });
