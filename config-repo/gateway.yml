@@ -20,6 +20,9 @@ ribbon:
 zuul:
   ignoredServices: '*'
   routes:
+    webapp:
+      path: /**
+      serviceId: webapp
     auth-service:
       path: /uaa/**
       stripPrefix: false
