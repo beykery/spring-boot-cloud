@@ -79,6 +79,7 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
                 .secret("password")
                 .authorizedGrantTypes("authorization_code", "refresh_token")
                 .scopes("read")
+                .autoApprove(true)
         ;
     }
 
