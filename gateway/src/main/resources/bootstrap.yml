@@ -12,3 +12,13 @@ spring:
         max-interval: 10000
         multiplier: 2
         max-attempts: 10
+security:
+  oauth2:
+    client:
+      accessTokenUri: http://localhost:5000/uaa/oauth/token
+      userAuthorizationUri: http://localhost:5000/uaa/oauth/authorize
+      clientId: ui
+      clientSecret: password
+    resource:
+      preferTokenInfo: false
+  sessions: ALWAYS

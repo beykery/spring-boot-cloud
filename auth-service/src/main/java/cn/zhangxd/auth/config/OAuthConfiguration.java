@@ -35,9 +35,12 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
     }
 
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security)
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer)
             throws Exception {
-        security.passwordEncoder(passwordEncoder);
+        oauthServer
+                .passwordEncoder(passwordEncoder)
+                .tokenKeyAccess("permitAll()")
+                .checkTokenAccess("isAuthenticated()");
     }
 
     @Override
@@ -65,31 +68,18 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
                 .withClient("svca-service")
                 .secret("password")
                 .authorizedGrantTypes("client_credentials", "refresh_token")
-                .scopes("server")
+                .scopes("server","read")
                 .and()
                 .withClient("svcb-service")
                 .secret("password")
                 .authorizedGrantTypes("client_credentials", "refresh_token")
-                .scopes("server")
+                .scopes("server","read")
+                .and()
+                .withClient("ui")
+                .secret("password")
+                .authorizedGrantTypes("authorization_code", "refresh_token")
+                .scopes("read")
         ;
-
-    }
-
-    @Configuration
-    @Order(-20)
-    protected static class AuthenticationManagerConfiguration extends GlobalAuthenticationConfigurerAdapter {
-
-        @Autowired
-        private DataSource dataSource;
-
-        @Override
-        public void init(AuthenticationManagerBuilder auth) throws Exception {
-            auth.jdbcAuthentication().dataSource(dataSource)
-                    .withUser("dave").password("secret").roles("USER")
-                    .and()
-                    .withUser("anil").password("password").roles("ADMIN")
-            ;
-        }
     }
 
 }
