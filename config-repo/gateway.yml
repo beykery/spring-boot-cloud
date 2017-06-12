@@ -24,9 +24,8 @@ zuul:
       path: /**
       serviceId: webapp
     auth-service:
-      path: /uaa/**
-      stripPrefix: false
-      sensitiveHeaders:
+      path: /user/**
+      url: http://localhost:5000/uaa/user
     svca-service:
       path: /svca/**
       sensitiveHeaders:
