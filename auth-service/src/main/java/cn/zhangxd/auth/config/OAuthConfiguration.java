@@ -3,19 +3,14 @@ package cn.zhangxd.auth.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
-
-import javax.sql.DataSource;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 
 @Configuration
 @EnableAuthorizationServer
@@ -25,20 +20,17 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
     private AuthenticationManager auth;
 
     @Autowired
-    private DataSource dataSource;
-
-    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private RedisConnectionFactory redisConnectionFactory;
 
     @Bean
-    public JdbcTokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource);
+    public RedisTokenStore tokenStore() {
+        return new RedisTokenStore(redisConnectionFactory);
     }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer)
             throws Exception {
         oauthServer
-                .passwordEncoder(passwordEncoder)
                 .tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()");
     }
@@ -56,8 +48,7 @@ public class OAuthConfiguration extends AuthorizationServerConfigurerAdapter {
     public void configure(ClientDetailsServiceConfigurer clients)
             throws Exception {
 
-        clients.jdbc(dataSource)
-                .passwordEncoder(passwordEncoder)
+        clients.inMemory()
                 .withClient("client")
                 .secret("secret")
                 .authorizedGrantTypes("password", "refresh_token")
